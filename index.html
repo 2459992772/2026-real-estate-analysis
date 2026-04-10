@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年中国房地产：筑底企稳与极致分化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%);
+            color: #e8edf4;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* 头部区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #a8c6e8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #7a8fa8;
+            margin-bottom: 8px;
+        }
+
+        .header .source {
+            font-size: 0.9rem;
+            color: #ff8c42;
+            font-weight: 500;
+        }
+
+        /* 数据卡片 */
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        .data-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .data-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,140,66,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .data-card .label {
+            font-size: 0.95rem;
+            color: #7a8fa8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-card .value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .data-card .change {
+            font-size: 1rem;
+            color: #4ade80;
+        }
+
+        .data-card .change.negative {
+            color: #f87171;
+        }
+
+        .data-card .note {
+            font-size: 0.85rem;
+            color: #5a6a7a;
+            margin-top: 8px;
+        }
+
+        /* 橙色强调 */
+        .highlight {
+            color: #ff8c42;
+            font-weight: 600;
+        }
+
+        /* 图表区域 */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .chart-container {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chart {
+            width: 100%;
+            height: 350px;
+        }
+
+        /* 政策区域 */
+        .policy-section {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .policy-section h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .policy-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid #ff8c42;
+        }
+
+        .policy-item h4 {
+            font-size: 1.1rem;
+            color: #ff8c42;
+            margin-bottom: 10px;
+        }
+
+        .policy-item p {
+            font-size: 0.95rem;
+            color: #a8b8c8;
+            line-height: 1.6;
+        }
+
+        /* 城市分化 */
+        .city-section {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .city-section h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        .city-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .city-type {
+            padding: 24px;
+            border-radius: 16px;
+        }
+
+        .city-type.rising {
+            background: linear-gradient(135deg, rgba(74,222,128,0.15) 0%, rgba(74,222,128,0.05) 100%);
+            border: 1px solid rgba(74,222,128,0.3);
+        }
+
+        .city-type.falling {
+            background: linear-gradient(135deg, rgba(100,149,237,0.15) 0%, rgba(100,149,237,0.05) 100%);
+            border: 1px solid rgba(100,149,237,0.3);
+        }
+
+        .city-type h3 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .city-type.rising h3 {
+            color: #4ade80;
+        }
+
+        .city-type.falling h3 {
+            color: #6495ed;
+        }
+
+        .city-type .percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .city-type ul {
+            list-style: none;
+            color: #a8b8c8;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* 结论区域 */
+        .conclusion {
+            background: linear-gradient(145deg, rgba(255,140,66,0.15) 0%, rgba(255,140,66,0.05) 100%);
+            border: 2px solid rgba(255,140,66,0.3);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .conclusion h2 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .conclusion p {
+            font-size: 1.1rem;
+            color: #c8d8e8;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #5a6a7a;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .city-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-card .value {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* 数据来源标签 */
+        .source-tag {
+            display: inline-block;
+            background: rgba(255,140,66,0.2);
+            border: 1px solid rgba(255,140,66,0.3);
+            color: #ff8c42;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        /* 趋势箭头 */
+        .arrow {
+            display: inline-block;
+            margin-left: 8px;
+        }
+        .arrow.up { color: #4ade80; }
+        .arrow.down { color: #f87171; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>2026年中国房地产：筑底企稳与极致分化</h1>
+            <p class="subtitle">基于16家国内外顶级机构最新研判</p>
+            <span class="source">数据来源：国家统计局 · 住建部 · 中指研究院 · 中信证券 · 高盛</span>
+        </div>
+
+        <!-- 核心数据卡片 -->
+        <div class="data-cards">
+            <div class="data-card" style="animation-delay: 0.1s">
+                <div class="label">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8c42" stroke-width="2">
+                        <path d="M12 20V10M18 20V4M6 20v-4"/>
+                    </svg>
+                    全国新建商品房销售面积
+                </div>
+                <div class="value">-6.2%</div>
+                <div class="change negative">同比下降 <span class="arrow down">↓</span></div>
+                <div class="note">市场成交量逐步企稳</div>
+            </div>
+
+            <div class="data-card" style="animation-delay: 0.2s">
+                <div class="label">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8c42" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M9 9h6M9 15h6M9 12h6"/>
+                    </svg>
+                    开发投资
+                </div>
+                <div class="value">-11.0%</div>
+                <div class="change negative">同比下降 <span class="arrow down">↓</span></div>
+                <div class="note">投资热度持续降温</div>
+            </div>
+
+            <div class="data-card" style="animation-delay: 0.3s">
+                <div class="label">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8c42" stroke-width="2">
+                        <path d="M3 21h18M5 21V7l8-4 8 4v14M9 21v-6h6v6"/>
+                    </svg>
+                    新开工面积
+                </div>
+                <div class="value">-8.6%</div>
+                <div class="change negative">同比下降 <span class="arrow down">↓</span></div>
+                <div class="note">新项目开发放缓</div>
+            </div>
+
+            <div class="data-card" style="animation-delay: 0.4s">
+                <div class="label">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8c42" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    政策支持资金
+                </div>
+                <div class="value highlight">3000亿</div>
+                <div class="change">保障性住房再贷款 <span class="arrow up">↑</span></div>
+                <div class="note">中央财政专项支持</div>
+            </div>
+
+            <div class="data-card" style="animation-delay: 0.5s">
+                <div class="label">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8c42" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    库存消化目标
+                </div>
+                <div class="value highlight">500万+</div>
+                <div class="change">套存量房 <span class="arrow up">↑</span></div>
+                <div class="note">2026年计划消化量</div>
+            </div>
+
+            <div class="data-card" style="animation-delay: 0.6s">
+                <div class="label">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8c42" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                    </svg>
+                    取消限购城市
+                </div>
+                <div class="value highlight">100+</div>
+                <div class="change">座城市 <span class="arrow up">↑</span></div>
+                <div class="note">全国范围内松绑</div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">📉 2021-2026年全国商品房销售面积走势</div>
+                <div id="chart1" class="chart"></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 2025年 vs 2026年主要指标对比</div>
+                <div id="chart2" class="chart"></div>
+            </div>
+        </div>
+
+        <!-- 政策支持 -->
+        <div class="policy-section">
+            <h2>
+                <span style="font-size: 1.5rem;">🏛️</span>
+                政策托底：核心支撑
+            </h2>
+            <div class="policy-grid">
+                <div class="policy-item">
+                    <h4>取消限购限售</h4>
+                    <p>全国超百城已取消限购限售政策，降低购房门槛，释放改善型需求。</p>
+                </div>
+                <div class="policy-item">
+                    <h4>首付比例下调</h4>
+                    <p>首套房首付最低降至20%，降低刚需购房压力。</p>
+                </div>
+                <div class="policy-item">
+                    <h4>房贷利率下调</h4>
+                    <p>持续推进LPR改革，引导房贷利率下行，减轻购房者利息负担。</p>
+                </div>
+                <div class="policy-item">
+                    <h4>收储保障房</h4>
+                    <p>支持收购存量商品房用作保障房、人才房，盘活库存。</p>
+                </div>
+                <div class="policy-item">
+                    <h4>现房销售制</h4>
+                    <p>住建部推进现房销售，从根本上防范交付风险。</p>
+                </div>
+                <div class="policy-item">
+                    <h4>"好房子"工程</h4>
+                    <p>推动住房从"有没有"向"好不好"转变，提升住房品质。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 市场分化 -->
+        <div class="city-section">
+            <h2>🗺️ 市场分化：二八格局</h2>
+            <div class="city-grid">
+                <div class="city-type rising">
+                    <h3>🌟 企稳回升型城市</h3>
+                    <div class="percentage" style="color: #4ade80;">20%</div>
+                    <ul>
+                        <li>• 一线城市核心城区</li>
+                        <li>• 强二线城市核心地段</li>
+                        <li>• 率先止跌、横盘</li>
+                        <li>• 局部温和反弹 2-3%</li>
+                        <li>• 改善型需求旺盛</li>
+                    </ul>
+                </div>
+                <div class="city-type falling">
+                    <h3>📉 承压调整型城市</h3>
+                    <div class="percentage" style="color: #6495ed;">80%</div>
+                    <ul>
+                        <li>• 弱二线城市</li>
+                        <li>• 三四线城市</li>
+                        <li>• 继续承压</li>
+                        <li>• 跌势显著放缓</li>
+                        <li>• 投资需谨慎</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产品趋势 -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">🏠 户型成交结构变化</div>
+                <div id="chart3" class="chart"></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">🏢 市场份额向头部集中</div>
+                <div id="chart4" class="chart"></div>
+            </div>
+        </div>
+
+        <!-- 结论 -->
+        <div class="conclusion">
+            <h2>📌 核心结论</h2>
+            <p>
+                <strong>2026年，中国房地产市场不会出现系统性崩盘，也不会迎来全面大涨。</strong><br><br>
+                市场将在政策托底和分化格局中逐步<span class="highlight">筑底企稳</span>。<br><br>
+                对于购房者而言，<span class="highlight">核心城市核心地段</span>的优质资产仍是保值首选，而三四线城市则需谨慎投资。
+            </p>
+            <span class="source-tag">📊 数据来源：国家统计局、住建部、中指研究院、中信证券、高盛等16家机构</span>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>本报告基于公开数据整理，仅供参考，不构成投资建议</p>
+        </div>
+    </div>
+
+    <script>
+        // 图表1：销售面积走势
+        var chart1 = echarts.init(document.getElementById('chart1'));
+        chart1.setOption({
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(10, 22, 40, 0.95)',
+                borderColor: 'rgba(255,140,66,0.3)',
+                textStyle: { color: '#e8edf4' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['2021', '2022', '2023', '2024', '2025', '2026E'],
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                axisLabel: { color: '#7a8fa8' }
+            },
+            yAxis: {
+                type: 'value',
+                name: '亿平方米',
+                nameTextStyle: { color: '#7a8fa8' },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                axisLabel: { color: '#7a8fa8' },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            series: [{
+                name: '销售面积',
+                type: 'line',
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 10,
+                lineStyle: { width: 3, color: '#ff8c42' },
+                itemStyle: { color: '#ff8c42' },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(255,140,66,0.3)' },
+                        { offset: 1, color: 'rgba(255,140,66,0.05)' }
+                    ])
+                },
+                data: [17.9, 13.6, 11.2, 9.6, 9.0, 8.4]
+            }]
+        });
+
+        // 图表2：指标对比
+        var chart2 = echarts.init(document.getElementById('chart2'));
+        chart2.setOption({
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(10, 22, 40, 0.95)',
+                borderColor: 'rgba(255,140,66,0.3)',
+                textStyle: { color: '#e8edf4' }
+            },
+            legend: {
+                data: ['2025年', '2026年'],
+                textStyle: { color: '#7a8fa8' },
+                top: '5%'
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '15%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['销售面积降幅', '开发投资降幅', '新开工降幅'],
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                axisLabel: { color: '#7a8fa8' }
+            },
+            yAxis: {
+                type: 'value',
+                name: '同比变化 (%)',
+                nameTextStyle: { color: '#7a8fa8' },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                axisLabel: { color: '#7a8fa8' },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            series: [{
+                name: '2025年',
+                type: 'bar',
+                data: [-12.5, -18.2, -15.0],
+                itemStyle: { color: 'rgba(100,149,237,0.7)', borderRadius: [4, 4, 0, 0] }
+            }, {
+                name: '2026年',
+                type: 'bar',
+                data: [-6.2, -11.0, -8.6],
+                itemStyle: { color: '#ff8c42', borderRadius: [4, 4, 0, 0] }
+            }]
+        });
+
+        // 图表3：户型结构
+        var chart3 = echarts.init(document.getElementById('chart3'));
+        chart3.setOption({
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(10, 22, 40, 0.95)',
+                borderColor: 'rgba(255,140,66,0.3)',
+                textStyle: { color: '#e8edf4' }
+            },
+            legend: {
+                orient: 'vertical',
+                right: '5%',
+                top: 'center',
+                textStyle: { color: '#7a8fa8' }
+            },
+            series: [{
+                name: '户型占比',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                center: ['35%', '50%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 6,
+                    borderColor: '#0a1628',
+                    borderWidth: 2
+                },
+                label: { show: false },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', color: '#fff' }
+                },
+                data: [
+                    { value: 35, name: '90㎡以下', itemStyle: { color: '#6495ed' } },
+                    { value: 28, name: '90-120㎡', itemStyle: { color: '#4ade80' } },
+                    { value: 22, name: '120-144㎡', itemStyle: { color: '#ff8c42' } },
+                    { value: 15, name: '144㎡以上', itemStyle: { color: '#a78bfa' } }
+                ]
+            }]
+        });
+
+        // 图表4：市场份额
+        var chart4 = echarts.init(document.getElementById('chart4'));
+        chart4.setOption({
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(10, 22, 40, 0.95)',
+                borderColor: 'rgba(255,140,66,0.3)',
+                textStyle: { color: '#e8edf4' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['2020', '2022', '2024', '2026E'],
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                axisLabel: { color: '#7a8fa8' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'TOP10份额 (%)',
+                nameTextStyle: { color: '#7a8fa8' },
+                max: 60,
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                axisLabel: { color: '#7a8fa8' },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            series: [{
+                name: '市场份额',
+                type: 'bar',
+                data: [28, 35, 42, 50],
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#ff8c42' },
+                        { offset: 1, color: '#ff6b1a' }
+                    ]),
+                    borderRadius: [6, 6, 0, 0]
+                },
+                label: {
+                    show: true,
+                    position: 'top',
+                    color: '#ff8c42',
+                    fontWeight: 'bold'
+                }
+            }]
+        });
+
+        // 响应式
+        window.addEventListener('resize', function() {
+            chart1.resize();
+            chart2.resize();
+            chart3.resize();
+            chart4.resize();
+        });
+    </script>
+</body>
+</html>
